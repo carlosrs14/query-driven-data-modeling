@@ -43,7 +43,7 @@ En sistemas masivos, procesar uniones (JOINs) es costoso para la CPU. El modelo 
 
 ## 2. Evolución Histórica y Economía del Hardware
 
-[image: Línea de tiempo mostrando hitos: 1970 (Codd), 2006 (Bigtable), 2007 (Dynamo), 2009 (NoSQL)]
+![timeline_1970-2007](./images/timeline_1970-2007.png)
 
 ### 2.1 El Modelo de Edgar F. Codd (1970)
 
@@ -71,7 +71,7 @@ Hoy el almacenamiento es **barato y abundante**, pero el tiempo de procesamiento
 
 Las bases de datos relacionales tradicionales crecen **verticalmente** (más RAM/CPU en un solo servidor). Cuando el tráfico es global (Web 2.0), necesitamos **escalabilidad horizontal**: distribuir datos en cientos de servidores.
 
-[image: Diagrama comparativo de escalamiento vertical (un servidor gigante) vs horizontal (múltiples servidores distribuidos)]
+![comparative_diagram horizontal vs vertical scaling](./images/comparative_diagram_horizontal_vs_vertical.png)
 
 ### 2.4 Hitos de la Industria
 
@@ -83,7 +83,7 @@ Las bases de datos relacionales tradicionales crecen **verticalmente** (más RAM
 
 ## 3. Discrepancia de Impedancia y Agregados
 
-[image: Diagrama mostrando un objeto JSON jerárquico siendo "triturado" en tablas SQL normalizadas]
+![json int sql](./images/json_into_sql.png)
 
 ### 3.1 Definición de Discrepancia de Impedancia
 
@@ -101,7 +101,7 @@ Recuperar un objeto simple puede requerir consultar **5 o 10 tablas distintas**,
 - Montaje manual del objeto en memoria
 - Queries N+1
 
-[image: Diagrama de cómo un ORM descompone un objeto en múltiples queries a diferentes tablas]
+![ORM descompone un objeto en múltiples](./images/ORM_descompone_un_objeto_en_múltiples.png)
 
 ### 3.3 El Concepto de Agregado
 
@@ -128,13 +128,13 @@ Al usar documentos JSON/BSON:
 - No hay desensamblaje ni mapeo
 - La lectura es **directa y atómica**
 
-[image: Comparación mostrando cómo en MongoDB el documento en disco es igual al documento en memoria]
+![mono moemory](./images/mongo_memory.png)
 
 ---
 
 ## 4. El Modelo de Tabla Única (Single-Table Design)
 
-[image: Rick Houlihan, el arquitecto detrás de los patrones de DynamoDB en AWS]
+![Rick Houlihan](./images/Rick_Houlihan.jpg)
 
 ### 4.1 Rick Houlihan y el Equipo NoSQL Blackbelt
 
@@ -148,7 +148,7 @@ Estrategia radical para DynamoDB donde **todas las entidades** (clientes, pedido
 
 ### 4.3 Claves Primarias Compuestas
 
-[image: Diagrama explicativo de Partition Key (PK) y Sort Key (SK)]
+![pk&sk](./images/PK&SK.png)
 
 - **PK (Partition Key):** Define en qué nodo del clúster se guarda el dato
 - **SK (Sort Key):** Permite agrupar y ordenar datos relacionados físicamente
