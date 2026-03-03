@@ -165,7 +165,7 @@ Esto permite recuperar una entidad y todos sus hijos en un **solo viaje de red**
 
 ## 5. Implementación en DynamoDB vs. MongoDB
 
-[image: Logos comparativos de DynamoDB y MongoDB con sus características clave]
+![mongo vs dynamo ](./images/mongoVSdynamodb.png)
 
 ### 5.1 DynamoDB (Serverless y Rígido)
 
@@ -178,7 +178,7 @@ Esto permite recuperar una entidad y todos sus hijos en un **solo viaje de red**
 **Ventajas:**
 
 - Consistencia total
-- Rendimiento predecible a cualquier escala -完全托管 (fully managed)
+- Rendimiento predecible a cualquier escala - Fully managed (fully managed)
 
 ### 5.2 MongoDB (Documental y Flexible)
 
@@ -188,7 +188,37 @@ Esto permite recuperar una entidad y todos sus hijos en un **solo viaje de red**
 
 2. **Patrón Computado:** Calculamos totales (sumas, promedios) en el momento de la escritura. Cuando el usuario lee, el dato ya está listo.
 
-[image: Ejemplo de JSON mostrando un "Pedido" con datos del "Cliente" embebidos]
+```json
+{
+  "pedido_id": "ORD-2023-10-26-001",
+  "fecha_pedido": "2023-10-26T14:30:00Z",
+  "estado": "PROCESANDO",
+  "cliente_info": {
+    "cliente_id": "CUST-5544",
+    "nombre_completo": "Ana María García",
+    "email": "ana.garcia@example.com",
+    "telefono": "+57 311 555 1234",
+    "es_miembro_premium": true
+  },
+  "productos": [
+    {
+      "producto_id": "PROD-A",
+      "nombre": "Zapatillas para correr",
+      "cantidad": 1,
+      "precio_unitario": 89.99
+    },
+    {
+      "producto_id": "PROD-C",
+      "nombre": "Camiseta técnica",
+      "cantidad": 2,
+      "precio_unitario": 35.0
+    }
+  ],
+  "metodo_pago": "Tarjeta de Crédito",
+  "total_pedido": 159.99,
+  "moneda": "USD"
+}
+```
 
 ### 5.3 Decisión Estratégica
 
@@ -207,7 +237,7 @@ Esto permite recuperar una entidad y todos sus hijos en un **solo viaje de red**
 
 ## 6. Antipatrones, Riesgos y Conclusión
 
-[image: warning icon con los antipatrones más comunes]
+![Antipatrones waning](./images/antipatrones_warning.png)
 
 ### 6.1 Antipatrones Destructivos
 
@@ -221,7 +251,36 @@ Esto permite recuperar una entidad y todos sus hijos en un **solo viaje de red**
 - Intentar hacer JOINs manuales en el código del servidor (Client-side joins)
 - Esto multiplica la latencia **exponencialmente**
 
-[image: Ejemplo de código mostrando un client-side join que debería evitarse]
+```python
+# ANTIPATRÓN: Múltiples llamadas bloqueantes a la BD
+def obtener_detalle_pedido(pedido_id):
+    # 1. Primera consulta: Buscar el pedido base
+    pedido = db.pedidos.find_one({"_id": pedido_id})
+
+    # 2. Segunda consulta: Buscar datos del cliente (Simulando un JOIN)
+    # Error: Si tienes 1000 peticiones por segundo, esto duplica la carga
+    cliente = db.clientes.find_one({"_id": pedido['cliente_id']})
+
+    # 3. N consultas adicionales: El "N+1 Problem"
+    # Por cada producto en el pedido, hacemos un viaje a la base de datos
+    detalles_productos = []
+    for item in pedido['items']:
+        # ¡MUY LENTO! Si el pedido tiene 20 items, haces 20 consultas extras
+        prod = db.productos.find_one({"_id": item['producto_id']})
+        detalles_productos.append({
+            "nombre": prod['nombre'],
+            "precio": prod['precio'],
+            "cantidad": item['cantidad']
+        })
+
+    # Construcción manual del objeto final
+    pedido_final = {
+        **pedido,
+        "cliente_nombre": cliente['nombre'],
+        "productos": detalles_productos
+    }
+    return pedido_final
+```
 
 ### 6.2 La Trampa Analítica (OLTP vs OLAP)
 
@@ -229,7 +288,7 @@ Esto permite recuperar una entidad y todos sus hijos en un **solo viaje de red**
 
 **OLAP (Analítico):** Es ilegible para humanos o herramientas de BI (Excel/Tableau).
 
-[image: Diagrama de arquitectura mostrando cómo los datos fluyen de la app (DynamoDB/MongoDB) a un Data Warehouse (Snowflake/Redshift)]
+![Trampa analitica](./images/Trampa_Analitica.png)
 
 **Solución:** Usar "Streams" que exporten los datos a un **Data Warehouse** (Snowflake o Redshift) donde se vuelvan a normalizar para análisis.
 
