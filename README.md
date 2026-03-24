@@ -159,7 +159,7 @@ Al compartir la misma PK, datos de distinto tipo se guardan en **sectores contig
 
 Esto permite recuperar una entidad y todos sus hijos en un **solo viaje de red** (Round-trip), eliminando la necesidad de JOINs.
 
-[image: Representación visual de cómo datos con la misma PK se almacenan físicamente juntos en el disco]
+![Almacenamiento fisico data NoSQL](./images/almacenamiento-fisico-data-nosql.png)
 
 ---
 
