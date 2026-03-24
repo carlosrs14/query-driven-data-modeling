@@ -282,16 +282,6 @@ def obtener_detalle_pedido(pedido_id):
     return pedido_final
 ```
 
-### 6.2 La Trampa Analítica (OLTP vs OLAP)
-
-**OLTP (Transaccional):** El diseño orientado a consultas es perfecto para la App.
-
-**OLAP (Analítico):** Es ilegible para humanos o herramientas de BI (Excel/Tableau).
-
-![Trampa analitica](./images/Trampa_Analitica.png)
-
-**Solución:** Usar "Streams" que exporten los datos a un **Data Warehouse** (Snowflake o Redshift) donde se vuelvan a normalizar para análisis.
-
 ## Recursos Adicionales
 
 - [Documento de Bigtable (Google)](enlace)
